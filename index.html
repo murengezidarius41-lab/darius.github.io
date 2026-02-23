@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- ============================================================
+     FRESH ONLINE FRUITS — Single-File Website
+     Sections: Header · Nav · Home · Products · Community · Contact · Footer
+     Features: Shopping Cart · Delivery Address · AI Fruit Info · Community Board
+     Author: Fresh Online Fruits | Kigali, Rwanda
+     ============================================================ -->
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fresh Online Fruits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ── 1. DESIGN TOKENS ───────────────────────────────────────────── */
+        :root {
+            --green  : #1a6b2f;
+            --lime   : #5cb85c;
+            --gold   : #f5c518;
+            --cream  : #fdf8f0;
+            --dark   : #0f2d14;
+            --text   : #2c3e2d;
+            --radius : 16px;
+            --shadow : 0 4px 15px rgba(0, 0, 0, 0.07);
+        }
+
+        /* ── 2. RESET ───────────────────────────────────────────────────── */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); }
+
+        /* ── 3. HEADER ──────────────────────────────────────────────────── */
+        header {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--green) 100%);
+            color: white;
+            text-align: center;
+            padding: 50px 20px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '🍃'; font-size: 200px;
+            position: absolute; top: -40px; left: -40px;
+            opacity: 0.07;
+        }
+        header::after {
+            content: '🍃'; font-size: 200px;
+            position: absolute; bottom: -60px; right: -40px;
+            opacity: 0.07; transform: scaleX(-1);
+        }
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem; letter-spacing: -1px; margin-bottom: 8px;
+        }
+        header p { font-size: 1.1rem; opacity: 0.85; font-weight: 500; }
+
+        /* ── 4. NAVIGATION ──────────────────────────────────────────────── */
+        nav {
+            background: var(--dark);
+            padding: 0 20px;
+            text-align: center;
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        nav a {
+            color: white; text-decoration: none;
+            margin: 0 5px; font-weight: 600;
+            font-size: 0.9rem; padding: 16px 18px;
+            display: inline-block; letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a:hover { color: var(--gold); background: rgba(255, 255, 255, 0.05); }
+
+        /* Cart button inside nav */
+        #cart-btn {
+            float: right;
+            background: var(--gold); color: var(--dark) !important;
+            border-radius: 20px; margin-top: 10px;
+            padding: 6px 16px !important; font-weight: 700 !important;
+        }
+        #cart-btn:hover { background: #e6b800 !important; }
+
+        /* ── 5. HOME / HERO SECTION ─────────────────────────────────────── */
+        #home { padding: 70px 20px; text-align: center; }
+        #home h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem; color: var(--green); margin-bottom: 15px;
+        }
+        #home > p {
+            font-size: 1.15rem; color: #555;
+            max-width: 500px; margin: 0 auto 30px;
+        }
+        .hero-badges span {
+            display: inline-block;
+            background: white; border: 2px solid var(--lime);
+            color: var(--green); border-radius: 50px;
+            padding: 8px 18px; margin: 5px;
+            font-weight: 600; font-size: 0.9rem;
+        }
+
+        /* ── 6. PRODUCTS SECTION ────────────────────────────────────────── */
+        #products { padding: 60px 20px; text-align: center; background: white; }
+        #products h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem; color: var(--dark); margin-bottom: 40px;
+        }
+        #products h2 span { color: var(--lime); }
+
+        .fruits-grid {
+            display: flex; flex-wrap: wrap;
+            justify-content: center; gap: 20px;
+            max-width: 1100px; margin: 0 auto;
+        }
+
+        /* Individual fruit card */
+        .fruit {
+            border: none; border-radius: var(--radius);
+            padding: 25px 20px; background: var(--cream);
+            width: 210px; box-shadow: var(--shadow);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .fruit:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(26, 107, 47, 0.15);
+        }
+        .fruit-emoji { font-size: 3.5rem; margin-bottom: 10px; display: block; }
+        .fruit h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem; color: var(--dark); margin-bottom: 6px;
+        }
+        .fruit .price { color: var(--green); font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+        .fruit .desc  { font-size: 0.82rem; color: #888; margin-bottom: 15px; }
+
+        /* Add to Cart button on product card */
+        .btn-order {
+            background: linear-gradient(135deg, var(--green), var(--lime));
+            color: white; border: none;
+            padding: 10px 20px; border-radius: 8px;
+            cursor: pointer; font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem; width: 100%;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .btn-order:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* ── 7. CART MODAL ──────────────────────────────────────────────── */
+
+        /* Dark overlay behind the cart */
+        .cart-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center; align-items: center;
+        }
+        .cart-overlay.active { display: flex; }
+
+        /* White modal box */
+        .cart-modal {
+            background: white;
+            border-radius: var(--radius); padding: 30px;
+            width: 90%; max-width: 460px;
+            max-height: 85vh; overflow-y: auto;
+        }
+        .cart-modal h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem; margin-bottom: 20px; color: var(--dark);
+        }
+
+        /* Cart item rows */
+        .cart-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #eee; font-size: 0.95rem;
+        }
+        .cart-total {
+            font-weight: 700; color: var(--green);
+            font-size: 1.1rem; margin-top: 15px; text-align: right;
+        }
+        .cart-empty { color: #999; text-align: center; padding: 20px; }
+
+        /* ── 9. DELIVERY ADDRESS (inside cart modal) ────────────────────── */
+        .delivery-section {
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 2px dashed #e0e0e0;
+        }
+        .delivery-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem; color: var(--dark); margin-bottom: 14px;
+        }
+
+        /* All input fields inside delivery section */
+        .delivery-section input,
+        .delivery-section select,
+        .delivery-section textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.92rem; color: var(--text);
+            margin-bottom: 10px; outline: none;
+            transition: border-color 0.2s;
+            background: #fafafa;
+        }
+        .delivery-section input:focus,
+        .delivery-section select:focus,
+        .delivery-section textarea:focus {
+            border-color: var(--lime);
+            background: white;
+        }
+        .delivery-section textarea {
+            min-height: 75px;
+            resize: vertical;
+            margin-bottom: 6px;
+        }
+
+        /* Side-by-side row (name + phone) */
+        .delivery-row {
+            display: flex; gap: 10px;
+        }
+        .delivery-row input { flex: 1; }
+
+        /* Small helper note below address textarea */
+        .delivery-note {
+            font-size: 0.8rem; color: #888;
+            margin-bottom: 12px; line-height: 1.5;
+        }
+
+        /* Place Order & Close buttons */
+        .btn-checkout {
+            background: var(--gold); color: var(--dark);
+            border: none; padding: 14px; border-radius: 10px;
+            cursor: pointer; font-weight: 700; font-size: 1rem;
+            width: 100%; margin-top: 6px;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.2s;
+        }
+        .btn-checkout:hover { background: #e6b800; }
+        .btn-close {
+            background: #eee; color: #333;
+            border: none; padding: 10px 20px; border-radius: 8px;
+            cursor: pointer; font-weight: 600;
+            margin-top: 10px; width: 100%;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* ── 10. CONTACT SECTION ────────────────────────────────────────── */
+        #contact { padding: 60px 20px; text-align: center; background: var(--cream); }
+        #contact h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem; color: var(--dark); margin-bottom: 30px;
+        }
+        .contact-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .contact-card {
+            background: white; border-radius: 12px;
+            padding: 20px 30px; box-shadow: var(--shadow);
+        }
+        .contact-card span { font-size: 1.5rem; display: block; margin-bottom: 8px; }
+
+        /* ── 11. FOOTER ─────────────────────────────────────────────────── */
+        footer {
+            background: var(--dark);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center; padding: 20px; font-size: 0.9rem;
+        }
+        footer strong { color: var(--gold); }
+
+        /* ── 12. TOAST NOTIFICATION ─────────────────────────────────────── */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark); color: white;
+            padding: 14px 24px; border-radius: 50px;
+            font-weight: 600; z-index: 9999;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+
+<body>
+
+    <!-- ════════════════════════════════════════════════════════
+         HEADER
+    ════════════════════════════════════════════════════════ -->
+    <header>
+        <h1>🍊 Fresh Online Fruits</h1>
+        <p>Healthy Fruits Delivered to Your Doorstep</p>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════════
+         NAVIGATION BAR
+    ════════════════════════════════════════════════════════ -->
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#contact">Contact</a>
+        <!-- Cart button (top-right) -->
+        <a href="#" id="cart-btn" onclick="toggleCart(event)">
+            🛒 Cart (<span id="cart-count">0</span>)
+        </a>
+    </nav>
+
+    <!-- ════════════════════════════════════════════════════════
+         HOME / HERO
+    ════════════════════════════════════════════════════════ -->
+    <section id="home">
+        <h2>Welcome to Our Fruit Shop</h2>
+        <p>Order fresh fruits online and get fast delivery across Rwanda!</p>
+        <div class="hero-badges">
+            <span>🚚 Fast Delivery</span>
+            <span>🌿 100% Fresh</span>
+            <span>💳 Mobile Payment</span>
+            <span>📍 Kigali Based</span>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════
+         PRODUCTS
+    ════════════════════════════════════════════════════════ -->
+    <section id="products">
+        <h2>Our <span>Fresh</span> Fruits</h2>
+        <div class="fruits-grid">
+
+            <div class="fruit">
+                <span class="fruit-emoji">🍌</span>
+                <h3>Bananas</h3>
+                <p class="desc">Sweet &amp; ripe, perfect for energy</p>
+                <p class="price">1,000 RWF / bunch</p>
+                <button class="btn-order" onclick="addToCart('Bananas', 1000)">Add to Cart</button>
+            </div>
+
+            <div class="fruit">
+                <span class="fruit-emoji">🍊</span>
+                <h3>Oranges</h3>
+                <p class="desc">Juicy &amp; vitamin C rich</p>
+                <p class="price">1,500 RWF / kg</p>
+                <button class="btn-order" onclick="addToCart('Oranges', 1500)">Add to Cart</button>
+            </div>
+
+            <div class="fruit">
+                <span class="fruit-emoji">🥭</span>
+                <h3>Mangoes</h3>
+                <p class="desc">Tropical sweetness at its best</p>
+                <p class="price">2,000 RWF / kg</p>
+                <button class="btn-order" onclick="addToCart('Mangoes', 2000)">Add to Cart</button>
+            </div>
+
+            <div class="fruit">
+                <span class="fruit-emoji">🍍</span>
+                <h3>Pineapples</h3>
+                <p class="desc">Fresh &amp; tangy, locally sourced</p>
+                <p class="price">2,500 RWF / each</p>
+                <button class="btn-order" onclick="addToCart('Pineapples', 2500)">Add to Cart</button>
+            </div>
+
+            <div class="fruit">
+                <span class="fruit-emoji">🍎</span>
+                <h3>Apples</h3>
+                <p class="desc">Crispy and refreshing</p>
+                <p class="price">3,000 RWF / kg</p>
+                <button class="btn-order" onclick="addToCart('Apples', 3000)">Add to Cart</button>
+            </div>
+
+            <div class="fruit">
+                <span class="fruit-emoji">🍇</span>
+                <h3>Grapes</h3>
+                <p class="desc">Seedless &amp; sweet bunches</p>
+                <p class="price">3,500 RWF / kg</p>
+                <button class="btn-order" onclick="addToCart('Grapes', 3500)">Add to Cart</button>
+            </div>
+
+        </div>
+  </section>
+
+<section id="contact">
+    <h2>Contact Us</h2>
+    <div class="contact-cards">
+        <div class="contact-card"><span>📞</span><strong>+250 794 218 111</strong></div>
+        <div class="contact-card"><span>📧</span><strong>murengezidarius41@gmail.com</strong></div>
+        <div class="contact-card"><span>📍</span><strong>Kigali, Rwanda</strong></div>
+    </div>
+</section>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════
+         FOOTER
+    ════════════════════════════════════════════════════════ -->
+    <footer>
+        <p>© 2026 <strong>Fresh Online Fruits</strong> | All Rights Reserved | Kigali, Rwanda 🇷🇼</p>
+    </footer>
+
+    <!-- ════════════════════════════════════════════════════════
+         CART MODAL (fixed overlay)
+    ════════════════════════════════════════════════════════ -->
+    <div class="cart-overlay" id="cartOverlay">
+        <div class="cart-modal">
+
+            <h3>🛒 Your Cart</h3>
+
+            <!-- Cart items injected by JS -->
+            <div id="cart-items">
+                <p class="cart-empty">Your cart is empty</p>
+            </div>
+
+            <!-- Running total injected by JS -->
+            <div class="cart-total" id="cart-total"></div>
+
+            <!-- ════════════════════════════════════════════════
+                 DELIVERY ADDRESS SECTION
+                 Customers fill this in before placing their order.
+                 All fields are validated in checkout() before confirming.
+            ════════════════════════════════════════════════ -->
+            <div class="delivery-section">
+                <h4>📍 Delivery Details</h4>
+
+                <!-- Row 1: Full name + Phone number (side by side) -->
+                <div class="delivery-row">
+                    <input type="text" id="deliveryName"  placeholder="Full name" />
+                    <input type="tel"  id="deliveryPhone" placeholder="Phone number" />
+                </div>
+
+                <!-- District dropdown -->
+                <select id="deliveryDistrict">
+                    <option value="">— Select District —</option>
+                    <option>Gasabo</option>
+                    <option>Kicukiro</option>
+                    <option>Nyarugenge</option>
+                    <option>Other (outside Kigali)</option>
+                </select>
+
+                <!-- Sector / Cell (optional but helpful) -->
+                <input
+                    type="text"
+                    id="deliverySector"
+                    placeholder="Sector / Cell (e.g. Kimironko, Kibagabaga)"
+                />
+
+                <!-- Street address or landmark (required) -->
+                <textarea
+                    id="deliveryAddress"
+                    placeholder="Street address or landmark (e.g. near KBC, behind Nakumatt...)"
+                ></textarea>
+
+                <!-- Delivery coverage notice -->
+                <p class="delivery-note">
+                    🛵 We deliver within Kigali. For other areas, our team will confirm availability by phone.
+                </p>
+            </div>
+            <!-- END DELIVERY ADDRESS SECTION -->
+
+            <button class="btn-checkout" onclick="checkout()">✅ Place Order</button>
+            <button class="btn-close"    onclick="toggleCart(event)">Close</button>
+
+        </div>
+    </div>
+
+    <!-- Toast notification element -->
+    <div class="toast" id="toast"></div>
+
+
+    <!-- ════════════════════════════════════════════════════════
+         JAVASCRIPT
+    ════════════════════════════════════════════════════════ -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+
+        /* ── STATE ─────────────────────────────────────────────────────── */
+        let cart = [];   // Array of { name, price, qty }
+
+
+        /* ══════════════════════════════════════════════════════
+           CART FUNCTIONS
+        ══════════════════════════════════════════════════════ */
+
+        /**
+         * addToCart
+         * Adds a fruit to the cart. If it already exists, increments qty.
+         * @param {string} name  - Fruit name
+         * @param {number} price - Price in RWF
+         */
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
+            updateCartUI();
+            showToast('🛒 ' + name + ' added to cart!');
+        }
+
+        /**
+         * updateCartUI
+         * Re-renders the cart item list, the nav badge count,
+         * and the running total price.
+         */
+        function updateCartUI() {
+            // Update nav badge
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-count').textContent = totalQty;
+
+            const container = document.getElementById('cart-items');
+            const totalEl   = document.getElementById('cart-total');
+
+            // Empty state
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
+                totalEl.textContent  = '';
+                return;
+            }
+
+            // Build item rows and calculate grand total
+            let html  = '';
+            let total = 0;
+            cart.forEach(item => {
+                const lineTotal = item.price * item.qty;
+                total += lineTotal;
+                html +=
+                    '<div class="cart-item">' +
+                        '<span>' + item.name + ' &times;' + item.qty + '</span>' +
+                        '<span>' + lineTotal.toLocaleString() + ' RWF</span>' +
+                    '</div>';
+            });
+
+            container.innerHTML = html;
+            totalEl.textContent = 'Total: ' + total.toLocaleString() + ' RWF';
+        }
+
+        /**
+         * toggleCart
+         * Opens or closes the cart overlay modal.
+         */
+        function toggleCart(e) {
+            e.preventDefault();
+            document.getElementById('cartOverlay').classList.toggle('active');
+        }
+
+        /**
+         * checkout
+         * Validates all delivery fields, then confirms the order.
+         * Clears cart and delivery form on success.
+         */
+        function checkout() {
+
+            // Step 1 — ensure cart is not empty
+            if (cart.length === 0) {
+                showToast('⚠️ Your cart is empty!');
+                return;
+            }
+
+            // Step 2 — read delivery fields
+            const name     = document.getElementById('deliveryName').value.trim();
+            const phone    = document.getElementById('deliveryPhone').value.trim();
+            const district = document.getElementById('deliveryDistrict').value;
+            const sector   = document.getElementById('deliverySector').value.trim();
+            const address  = document.getElementById('deliveryAddress').value.trim();
+
+            // Step 3 — validate required fields
+            if (!name)     { showToast('⚠️ Please enter your full name!');           return; }
+            if (!phone)    { showToast('⚠️ Please enter your phone number!');        return; }
+            if (!district) { showToast('⚠️ Please select your district!');           return; }
+            if (!address)  { showToast('⚠️ Please enter your address or landmark!'); return; }
+
+            // Step 4 — clear the cart
+            cart = [];
+            updateCartUI();
+
+            // Step 5 — clear the delivery form
+            document.getElementById('deliveryName').value     = '';
+            document.getElementById('deliveryPhone').value    = '';
+            document.getElementById('deliveryDistrict').value = '';
+            document.getElementById('deliverySector').value   = '';
+            document.getElementById('deliveryAddress').value  = '';
+
+            // Step 6 — close modal and show confirmation
+            document.getElementById('cartOverlay').classList.remove('active');
+            const location = (sector ? sector + ', ' : '') + district;
+            showToast('🎉 Order placed! Delivering to ' + location + '. Expect a call soon!');
+        }
+
+
+        /* ══════════════════════════════════════════════════════
+           TOAST UTILITY
+        ══════════════════════════════════════════════════════ */
+
+        /**
+         * showToast
+         * Displays a temporary notification at the bottom of the screen.
+         * Automatically hides after 3 seconds.
+         * @param {string} message - Text to display
+         */
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+
+        /* ══════════════════════════════════════════════════════
+           INITIALISE ON PAGE Load
+        ══════════════════════════════════════════════════════ */
+        updateCartUI();
+
+    </script>
+
+</body>
+</html>
